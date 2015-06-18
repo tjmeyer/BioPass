@@ -23,22 +23,22 @@ import java.util.logging.Logger;
  * @author M
  */
 public class DBManager {
-    // JDBC driver name and database URL
+//    // JDBC driver name and database URL
 //    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 //    static final String DB_URL = "jdbc:mysql://localhost/biopass";
 //    
 //    //  Database credentials
 //    static final String USER = "root";
 //    static final String PASS = "kumite2";
-    
+//    
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-    static final String DB_URL = "jdbc:mysql://127.11.36.130:3306/ml";
+    static final String DB_URL = "jdbc:mysql://127.11.36.130:3306/biopass";
     
     //  Database credentials
     static final String USER = "adminuTI1g75";
     static final String PASS = "SVczzGD1Vi1n";
-    
+//    
     // This is a singleton class
     static DBManager singletonInstance = null;
     static Connection conn = null;
