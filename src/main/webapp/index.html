@@ -1,9 +1,9 @@
 <!DOCTYPE html>
- 
+
 <html>
     <head>
         <title>Echo Chamber</title>
-        <meta cha1rset="UTF-8">
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
     </head>
     <body onload="document.getElementById('passwordInput').focus();">
@@ -16,6 +16,7 @@
         <div style="text-align:center;">
             <button id="submit" onclick="passCapture();"/>Login!</button>
             <button id="reset" onclick="reset();">Retry</button>
+            <a href="createAccount.jsp" style="text-align: center;">Create Account</a>
         </div>
         <br/>
         <div style="text-align:center;">
@@ -27,6 +28,8 @@
         <div id="messages"></div>
         <hr/>
         <div id="chartContainer"></div>
+        <hr/>
+        <a href="createAccount">Create Account</a>
         <!-- Script to capture and send key strokes-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script type="text/javascript" src="PassCapture.js"></script>

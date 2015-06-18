@@ -67,7 +67,7 @@ function capturedListToString()
     var result = "";
     for (var i = 0; i < capturedList.length; i++)
     {
-        result += capturedList[i].key + ":{" + capturedList[i].start + ":" + capturedList[i].time + "} ";
+        result += capturedList[i].key + ":" + capturedList[i].start + "-" + capturedList[i].time + " ";
     
     }
     return result;
@@ -101,7 +101,9 @@ function compare(a, b)
 
 function display()
 {
-    document.getElementById("messages").innerHTML = capturedListToString();
+    var message = capturedListToString();
+    document.getElementById("messages").innerHTML = message;
+    document.getElementById("capture").value = message;
 }
 
 function reset()
@@ -116,10 +118,15 @@ function reset()
 
 function passCapture()
 {
-    var usernamed = $('#username').val();
- 
-    $.post('CheckUsername', {username: usernamed, arg: capturedListToString()}, function(response)
+    var user = $('#username').val();
+    var pass = $('#password').val();
+    $.post('Login', {username: user, password: pass, group: capturedListToString()}, function(response)
     {
+        if(response === "valid")
+        {
+            window.location.replace("loginHome.jsp");
+        }
         $('#messages').text(response);
+        
     }); 
 }
