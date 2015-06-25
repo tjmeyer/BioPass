@@ -5,8 +5,12 @@
  */
 package com.nex.logic;
 
+import com.nex.biopass.DBManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author M
  */
-@WebServlet(name = "NewServlet", urlPatterns = {"/NewServlet"})
-public class NewServlet extends HttpServlet {
+@WebServlet(name = "SetDev", urlPatterns = {"/SetDev"})
+public class SetDev extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,18 +35,27 @@ public class NewServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String dev = request.getParameter("deviation");
+        String message = "";
+                        System.out.println("Dev == "+dev);
+        if(Double.valueOf(dev) >= 1.25 &&
+                Double.valueOf(dev) <= 5)
+        {
+            try {
+                DBManager db = DBManager.getInstance();
+                String sql = "UPDATE user SET dev = "+dev+" WHERE username = \""+request.getSession().getAttribute("user")+"\"";
+                db.executeUpdate(sql);
+                message = "<span style='color:green;'>Successfully Saved</span>";
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(SetDev.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.setAttribute("message", message);
+            request.getSession().setAttribute("threshold", dev);
+            request.getRequestDispatcher("loginHome.jsp").forward(request, response);
+        }
+        else
+        {
+            message = "<span style='color:red;'>Invalid Threshold Deviation, learn to read.</span>";
         }
     }
 

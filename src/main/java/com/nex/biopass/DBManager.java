@@ -30,7 +30,7 @@ public class DBManager {
 //    //  Database credentials
 //    static final String USER = "root";
 //    static final String PASS = "kumite2";
-//    
+    
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
     static final String DB_URL = "jdbc:mysql://127.11.36.130:3306/biopass";
@@ -38,7 +38,7 @@ public class DBManager {
     //  Database credentials
     static final String USER = "adminuTI1g75";
     static final String PASS = "SVczzGD1Vi1n";
-//    
+    
     // This is a singleton class
     static DBManager singletonInstance = null;
     static Connection conn = null;
@@ -107,12 +107,13 @@ public class DBManager {
     public void insertUser(String username, String password) throws SQLException
     {
         System.out.println("Preparing statement... [Insert INTO user VALUES (" +
-                username + ", " + password + ") ");
-        String query = "INSERT INTO user (username, password) " +
-                "VALUES (?, ?)";
+                username + ", " + password + ", 1.8) ");
+        String query = "INSERT INTO user (username, password, dev) " +
+                "VALUES (?, ?, ?)";
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, username);
         statement.setString(2, password);
+        statement.setDouble(3, 1.8);
         statement.execute();
     }
     

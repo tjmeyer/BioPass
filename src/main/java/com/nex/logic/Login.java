@@ -48,20 +48,30 @@ public class Login extends HttpServlet {
         String responseMessage = null;
         try
         {
-            if(!DBManager.getInstance().usernameExists(username))
+            DBManager db = DBManager.getInstance();
+            if(!db.usernameExists(username))
             {
                 responseMessage = "Username ("+username+") does not exist.";
             }
-            else if(!DBManager.getInstance().passwordMatch(username, password))
+            else if(!db.passwordMatch(username, password))
             {
                 responseMessage = "Password does not match.";
             }
             else
             {
-                double threshold  = 2;
+                //default threshold
+                double threshold  = 1.8;
                 //build Analyzer and pass responsibility over
-                String sql = "SELECT threshold FROM user WHERE username = \""+username+"\"";
-
+                String sql = "SELECT dev FROM user WHERE username = \""+username+"\"";
+                ResultSet rs;
+                rs = db.execute(sql);
+                
+                while(rs.next())
+                {
+                    System.out.println("Retreiving deviation setting");
+                    threshold = rs.getDouble("dev");
+                }
+                
                 request.getSession().setAttribute("user", username);
                 Analyzer sessionTest = new Analyzer(username, grouping, threshold);
                 sessionTest.run();
@@ -73,7 +83,11 @@ public class Login extends HttpServlet {
                 {
                     DBManager.getInstance().insertGrouping(username, grouping);
                     request.getSession().setAttribute("user", username);
+                    request.getSession().setAttribute("hold", Analyzer.hold);
+                    request.getSession().setAttribute("fly", Analyzer.fly);
                     request.getSession().setAttribute("threshold", Analyzer.threshold);
+                    request.getSession().setAttribute("history", Analyzer.compareGroup);
+                    request.getSession().setAttribute("compare", Analyzer.testGroup);
                     responseMessage = "valid";                    
                 }
             }

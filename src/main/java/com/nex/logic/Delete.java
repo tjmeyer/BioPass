@@ -6,12 +6,10 @@
 package com.nex.logic;
 
 import com.nex.biopass.DBManager;
-import com.nex.biopass.Grouping;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -24,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author M
  */
-@WebServlet(name = "SavePassword", urlPatterns = {"/SavePassword"})
-public class SavePassword extends HttpServlet {
+@WebServlet(name = "Delete", urlPatterns = {"/Delete"})
+public class Delete extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,44 +35,22 @@ public class SavePassword extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException 
-    {
-        
-        int attemptNum = (int) request.getSession().getAttribute("attemptNumber");
-        String message = request.getParameter("capture");
-        
-        if(attemptNum < 6)
-        {
-            List<Grouping> groups = (List<Grouping>) request.getSession().getAttribute("groups");
-            groups.add(new Grouping(message));
-            request.getSession().setAttribute("groups", groups);
-            attemptNum++;
-            request.getSession().setAttribute("attemptNumber", attemptNum);
-            request.getRequestDispatcher("gatherPasswords.jsp").forward(request, response);
-        }
-        else
-        {
-            String user = (String) request.getSession().getAttribute("user");
-            String password = request.getParameter("password");
-            List<Grouping> groups = (List<Grouping>) request.getSession().getAttribute("groups");
+            throws ServletException, IOException {
+        String user = (String) request.getSession().getAttribute("user");
+        try {
+            DBManager db = DBManager.getInstance();
             
-            try {
-                DBManager db = DBManager.getInstance();
-                String sql = "INSERT INTO user VALUES(null, \'"+user+"\', \'"+password+"\', 1.8)";
-                db.executeUpdate(sql);
-                
-                for (int i = 0; i < groups.size(); i++)
-                {
-                    groups.get(i).save(user);
-                }   
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(SavePassword.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            response.sendRedirect("Logout");
+            //the magic of cascading deletes
+            String sql = "DELETE FROM user WHERE username = \""+user+"\"";
+            db.executeUpdate(sql);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
         }
+        response.sendRedirect("Logout");
+        
         
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
