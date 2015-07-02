@@ -30,6 +30,8 @@ public class Analyzer {
     public static double fly = 0;
     public static double hold = 0;
     public static double threshold;
+    public static boolean error = false;
+    public static String errorMessage = "";
     
     public Analyzer(String username, String message, double thresh) throws SQLException, ClassNotFoundException
     {
@@ -67,33 +69,40 @@ public class Analyzer {
         DescriptiveStatistics holdAnalysis = new DescriptiveStatistics();
         DescriptiveStatistics flyAnalysis  = new DescriptiveStatistics();
       
-        System.out.println("Running Analyzer: "+compareGroup.size());
+        System.out.println("Running Analyzer:");
+        System.out.println("compareGroup.size() :: "+compareGroup.size());
+        System.out.println("compareGroup.get(0).getCaptures().size() :: " + compareGroup.get(0).getCaptures().size());
               
         int currentCapture = 0;        
       
         // this while loop will prepare the compareGroup for analysis
         while(currentCapture < compareGroup.get(0).getCaptures().size())
         {
+            System.out.println("currentCapture # = "+currentCapture);
+            
             DescriptiveStatistics hold = new DescriptiveStatistics();
             DescriptiveStatistics fly = new DescriptiveStatistics();
             for(int i = 0; i < compareGroup.size(); i++)
             {
-                Capture current = compareGroup.get(i).getCaptures().get(currentCapture);
-            
-                // adding captures hold time to hold averages
-                hold.addValue(current.getTime());
-                
-                // we can't calculate fly time if we're indexing the last capture
-                // so we need to stop one short
-                if(compareGroup.get(i).getCaptures().size() > currentCapture + 1)
+                if(compareGroup.get(i).getCaptures().size() > currentCapture)
                 {
-                    // fly time = holdTime + totalTime - nextCapture'sTotalTime
-                    Capture next = compareGroup.get(i).getCaptures().get(currentCapture + 1);
-                    
-                    long flyTime = current.getTime() + current.getStart() - next.getStart();
-                    
-                    // adding capture's fly time to fly time averages
-                    fly.addValue(flyTime);
+                    Capture current = compareGroup.get(i).getCaptures().get(currentCapture);
+
+                    // adding captures hold time to hold averages
+                    hold.addValue(current.getTime());
+
+                    // we can't calculate fly time if we're indexing the last capture
+                    // so we need to stop one short
+                    if(compareGroup.get(i).getCaptures().size() > currentCapture + 1)
+                    {
+                        // fly time = holdTime + totalTime - nextCapture'sTotalTime
+                        Capture next = compareGroup.get(i).getCaptures().get(currentCapture + 1);
+
+                        long flyTime = current.getTime() + current.getStart() - next.getStart();
+
+                        // adding capture's fly time to fly time averages
+                        fly.addValue(flyTime);
+                    }
                 }
             }
             
@@ -113,16 +122,24 @@ public class Analyzer {
             
             double holdTime = current.getTime();
 
-            holdDev = abs(holdTime - holdStats.get(j).getMean()) / 
-                    holdStats.get(j).getStandardDeviation();
-            
-            if(j + 1 < testGroup.getCaptures().size())
+            try
             {
-                double flyTime = current.getTime() + current.getStart() - 
-                        testGroup.getCaptures().get(j + 1).getStart();
-                
-                flyDev = abs(flyTime - flyStats.get(j).getMean()) / 
-                        flyStats.get(j).getStandardDeviation();
+                holdDev = abs(holdTime - holdStats.get(j).getMean()) / 
+                        holdStats.get(j).getStandardDeviation();
+
+                if(j + 1 < testGroup.getCaptures().size())
+                {
+                    double flyTime = current.getTime() + current.getStart() - 
+                            testGroup.getCaptures().get(j + 1).getStart();
+
+                    flyDev = abs(flyTime - flyStats.get(j).getMean()) / 
+                            flyStats.get(j).getStandardDeviation();
+                }
+            }
+            catch(java.lang.IndexOutOfBoundsException e)
+            {
+                error = true;
+                errorMessage = e.toString();
             }
             
             holdAnalysis.addValue(holdDev);

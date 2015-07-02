@@ -75,7 +75,21 @@ public class Login extends HttpServlet {
                 request.getSession().setAttribute("user", username);
                 Analyzer sessionTest = new Analyzer(username, grouping, threshold);
                 sessionTest.run();
-                if(!Analyzer.valid)
+                if (Analyzer.error)
+                {
+                    responseMessage = "Inconsistency error detected in biometric history. "
+                            + "It would appear that you can't spell your "
+                            + "password correctly six times in a row. Try not. Do… or do not. There is no try.\n"
+                            + "Please recreate "+username+"'s account.\n"
+                            + "Invalid account has been automatically deleted, your attempt at gunking up my database has failed.";
+                    try {
+                        //the magic of cascading deletes
+                        db.executeUpdate("DELETE FROM user WHERE username = \""+username+"\"");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                else if(!Analyzer.valid)
                 {
                     responseMessage = "Invalid :: Hold: "+Analyzer.hold+" deviations, Fly: "+Analyzer.fly+" deviations.\n";
                 }
@@ -90,6 +104,8 @@ public class Login extends HttpServlet {
                     request.getSession().setAttribute("compare", Analyzer.testGroup);
                     responseMessage = "valid";                    
                 }
+                
+                
             }
         }
         catch (SQLException | ClassNotFoundException ex) 
