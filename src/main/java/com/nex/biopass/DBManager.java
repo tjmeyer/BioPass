@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author M
  */
 public class DBManager {
-    // JDBC driver name and database URL
+////     JDBC driver name and database URL
 //    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 //    static final String DB_URL = "jdbc:mysql://localhost/biopass";
 //    
@@ -104,13 +104,13 @@ public class DBManager {
     public void insertUser(String username, String password) throws SQLException
     {
         System.out.println("Preparing statement... [Insert INTO user VALUES (" +
-                username + ", " + password + ", 1.8) ");
+                username + ", " + password + ", 2.0) ");
         String query = "INSERT INTO user (username, password, dev) " +
                 "VALUES (?, ?, ?)";
         PreparedStatement statement = conn.prepareStatement(query);
         statement.setString(1, username);
         statement.setString(2, password);
-        statement.setDouble(3, 1.8);
+        statement.setDouble(3, 2.0);
         statement.execute();
     }
     
