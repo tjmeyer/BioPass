@@ -11,10 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +20,7 @@ import java.util.logging.Logger;
  * @author M
  */
 public class DBManager {
-//    // JDBC driver name and database URL
+    // JDBC driver name and database URL
 //    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
 //    static final String DB_URL = "jdbc:mysql://localhost/biopass";
 //    

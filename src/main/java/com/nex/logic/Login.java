@@ -75,7 +75,12 @@ public class Login extends HttpServlet {
                 request.getSession().setAttribute("user", username);
                 Analyzer sessionTest = new Analyzer(username, grouping, threshold);
                 sessionTest.run();
-                if (Analyzer.error)
+                
+                if(!Analyzer.valid)
+                {
+                    responseMessage = "Invalid :: Hold: "+Analyzer.hold+" deviations, Fly: "+Analyzer.fly+" deviations.\n";
+                }
+                else if (Analyzer.error)
                 {
                     responseMessage = "Inconsistency error detected in biometric history. "
                             + "It would appear that you can't spell your "
@@ -88,10 +93,6 @@ public class Login extends HttpServlet {
                     } catch (SQLException ex) {
                         Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
-                else if(!Analyzer.valid)
-                {
-                    responseMessage = "Invalid :: Hold: "+Analyzer.hold+" deviations, Fly: "+Analyzer.fly+" deviations.\n";
                 }
                 else
                 {
