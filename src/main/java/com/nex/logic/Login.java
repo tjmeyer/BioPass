@@ -60,7 +60,7 @@ public class Login extends HttpServlet {
             else
             {
                 //default threshold
-                double threshold  = 1.8;
+                double threshold  = 2.0;
                 //build Analyzer and pass responsibility over
                 String sql = "SELECT dev FROM user WHERE username = \""+username+"\"";
                 ResultSet rs;
@@ -79,20 +79,6 @@ public class Login extends HttpServlet {
                 if(!Analyzer.valid)
                 {
                     responseMessage = "Invalid :: Hold: "+Analyzer.hold+" deviations, Fly: "+Analyzer.fly+" deviations.\n";
-                }
-                else if (Analyzer.error)
-                {
-                    responseMessage = "Inconsistency error detected in biometric history. "
-                            + "It would appear that you can't spell your "
-                            + "password correctly six times in a row. Try not. Do… or do not. There is no try.\n"
-                            + "Please recreate "+username+"'s account.\n"
-                            + "Invalid account has been automatically deleted, your attempt at gunking up my database has failed.";
-                    try {
-                        //the magic of cascading deletes
-                        db.executeUpdate("DELETE FROM user WHERE username = \""+username+"\"");
-                    } catch (SQLException ex) {
-                        Logger.getLogger(Delete.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
                 else
                 {
