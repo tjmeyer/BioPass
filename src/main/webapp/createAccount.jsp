@@ -16,12 +16,13 @@
         <hr/>
         <form action="NewAccount" method="POST" style="display: ${usernameForm}">
             <label>username</label>
-            <input type="text" placeholder="username" name="username" value="${username}"/>
+            <input type="text" id='username' placeholder="username" name="username" value="${username}"/>
             <input type="submit" name="submit" value="submit"/>
         </form>
         <hr/>
         <div id="messages">
             ${messages}
         </div>
+        <script type="text/javascript" src="PassCapture.js"></script>
     </body>
 </html>

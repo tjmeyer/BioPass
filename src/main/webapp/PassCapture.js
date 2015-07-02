@@ -2,6 +2,15 @@ var capturedList = new Array(); // This is orded by when keys are PRESSED
 var processList = new Array(); // This is an interim list for ensuring that key duplicates are not confused.
 var currentID = 0;
 
+if (document.getElementById('password') != null)
+{
+    document.getElementById('password').focus();
+}
+else
+{
+    document.getElementById('username').focus();
+}
+
 function capture(ID, keyPressed){
     this.id     = ID;
     this.start  = new Date().getTime();
@@ -31,7 +40,7 @@ function capture(ID, keyPressed){
             }
             else
             {
-                label = "UNKNOWN";
+                label = "N/A";
             }
         }
         return label;
@@ -47,7 +56,7 @@ function findById(source, id)
             return source[i];
         }
     }
-    throw "Coun't find object with id: " + id;
+    throw "Couldn't find object with id: " + id;
 }
 
 function findByKey(source, key)
@@ -59,7 +68,7 @@ function findByKey(source, key)
             return i;
         }
     }
-    throw "Coun't find object with key: " + key;    
+    throw "Couldn't find object with key: " + key;    
 }
 
 function capturedListToString()
@@ -111,9 +120,13 @@ function reset()
     capturedList = new Array(); // This is orded by when keys are PRESSED
     processList = new Array(); // This is an interim list for ensuring that key duplicates are not confused.
     currentID = 0;
-    document.getElementById('passwordInput').value = "";
+    if(document.getElementById('capture') != null)
+    {
+        document.getElementById('capture').innerHTML = "";
+    }
+    document.getElementById('password').value = "";
     document.getElementById('messages').innerHTML = "";
-    document.getElementById('passwordInput').focus();
+    document.getElementById('password').focus();
 }
 
 function passCapture()

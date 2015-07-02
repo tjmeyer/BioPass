@@ -64,7 +64,6 @@ window.onload = function (){
             }
             chart.options.data[1].dataPoints.push({x: releaseTime - startTime, y: uptime, indexLabel: label});
         }
-        $("#reset").prop("disabled",true);
         $("#updateChart").prop("disabled",true);
 	chart.render();
     });

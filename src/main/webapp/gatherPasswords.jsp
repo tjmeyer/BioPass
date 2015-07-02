@@ -16,8 +16,7 @@
         <hr/>
         <form method="POST" action="SavePassword">
             <label>Password attempt: ${attemptNumber}</label><br/>
-            <input type="password" placeholder="password" name="password" id="passwordInput" onkeydown="startCapture(event);" onkeyup="endCapture(event);"/>
-            <input type="reset" onclick="reset();" id="reset" name="reset"/>
+            <input type="text" placeholder="password" name="password" id="password" onkeydown="startCapture(event);" onkeyup="endCapture(event);"/>
             <input type="submit" value="Submit"/>
             <input type="hidden" value="test" id="capture" name="capture"/>
         </form>
