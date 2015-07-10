@@ -26,7 +26,7 @@ public class DBManager {
 //    
 //    //  Database credentials
 //    static final String USER = "root";
-//    static final String PASS = "";
+//    static final String PASS = "kumite2";
     
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  

@@ -10,9 +10,6 @@ import com.nex.biopass.Capture;
 import com.nex.biopass.DBManager;
 import static java.lang.Math.abs;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,8 +77,8 @@ public class Analyzer {
         {
             System.out.println("currentCapture # = "+currentCapture);
             
-            DescriptiveStatistics hold = new DescriptiveStatistics();
-            DescriptiveStatistics fly = new DescriptiveStatistics();
+            DescriptiveStatistics holdDS = new DescriptiveStatistics();
+            DescriptiveStatistics flyDS = new DescriptiveStatistics();
             for(int i = 0; i < compareGroup.size(); i++)
             {
                 if(compareGroup.get(i).getCaptures().size() > currentCapture)
@@ -89,7 +86,7 @@ public class Analyzer {
                     Capture current = compareGroup.get(i).getCaptures().get(currentCapture);
 
                     // adding captures hold time to hold averages
-                    hold.addValue(current.getTime());
+                    holdDS.addValue(current.getTime());
 
                     // we can't calculate fly time if we're indexing the last capture
                     // so we need to stop one short
@@ -101,14 +98,14 @@ public class Analyzer {
                         long flyTime = current.getTime() + current.getStart() - next.getStart();
 
                         // adding capture's fly time to fly time averages
-                        fly.addValue(flyTime);
+                        flyDS.addValue(flyTime);
                     }
                 }
             }
             
             // push current stat objects onto the stack
-            holdStats.add(hold);
-            flyStats.add(fly);
+            holdStats.add(holdDS);
+            flyStats.add(flyDS);
             currentCapture++;
         }
         
