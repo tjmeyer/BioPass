@@ -140,6 +140,7 @@ public class Analyzer {
             {
                 error = true;
                 errorMessage = e.toString();
+                System.out.println("ERROR CAUGHT!!!!");
             }
             
             holdAnalysis.addValue(holdDev);
